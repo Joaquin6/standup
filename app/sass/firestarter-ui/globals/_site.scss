@@ -1,0 +1,91 @@
+/*******************************
+             Page
+*******************************/
+
+html, body {
+  height: 100%;
+}
+html {
+  font-size: $base-font-size;
+}
+body {
+  margin: 0px;
+  padding: 0px;
+  overflow-x: hidden;
+  min-width: 320px;
+  background: $white;
+  font-family: $base-font-family;
+  font-size: $base-font-size;
+  line-height: 1.4285em;
+  color: $black_87;
+  font-smoothing: antialiased;
+}
+
+/*******************************
+             Headers
+*******************************/
+
+h1, h2, h3, h4, h5 {
+  font-family: $base-font-family;
+  line-height: 1.2857em;
+  margin: calc(2rem -  0.14285em ) 0em 1rem;
+  font-weight: bold;
+  padding: 0em;
+  &:first-child {
+    margin-top: 0em;
+  }
+  &:last-child {
+    margin-bottom: 0em;
+  }
+}
+h1 {
+  min-height: 1rem;
+  font-size: $font-size-h1;
+}
+h2 {
+  font-size: $font-size-h2;
+}
+h3 {
+  font-size: $font-size-h3;
+}
+h4 {
+  font-size: $font-size-h4;
+}
+h5 {
+  font-size: $font-size-h5;
+}
+
+/*******************************
+             Text
+*******************************/
+
+p {
+  margin: 0em 0em 1em;
+  line-height: 1.4285em;
+  &:first-child {
+    margin-top: 0em;
+  }
+  &:last-child {
+    margin-bottom: 0em;
+  }
+}
+
+/*-------------------
+        Links
+--------------------*/
+
+a {
+  color: $blue;
+  text-decoration: none;
+  &:hover {
+    color: $slight-blue;
+    text-decoration: none;
+  }
+}
+
+/* Site */
+@include selection($powder-blue, $black_87);
+/* Form */
+textarea, input {
+  @include selection($dimmer-trans, $black_87);
+}

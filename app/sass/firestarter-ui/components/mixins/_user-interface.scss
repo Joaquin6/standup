@@ -1,0 +1,113 @@
+// This property controls the selection model and granularity of an element.
+//
+// @param $select
+//   [ none | text | toggle | element | elements | all | inherit ]
+@mixin user-select($select) {
+	$select: unquote($select);
+	@include with-each-prefix(user-select-none, $userselect-support-threshold) {
+		// old Firefox used a proprietary `-moz-none` value, starting with Firefox 21 `none` behaves like `-moz-none`
+		// @link https: //developer.mozilla.org/en-US/docs/Web/CSS/user-select
+		@include prefix-prop(user-select, if($current-prefix == -moz and $select == 'none', -moz-none, $select));
+	}
+}
+
+// Style the html5 input placeholder in browsers that support it.
+//
+// The styles for the input placeholder are passed as mixin content
+// and the selector comes from the mixin's context.
+//
+// For example:
+//
+//     #{elements-of-type(text-input)} {
+//       @include input-placeholder {
+//         color: #bfbfbf;
+//         font-style: italic;
+//       }
+//     }
+//
+// if you want to apply the placeholder styles to all elements supporting
+// the `input-placeholder` pseudo class (beware of performance impacts):
+//
+//     * {
+//       @include input-placeholder {
+//         color: #bfbfbf;
+//         font-style: italic;
+//       }
+//     }
+@mixin input-placeholder($applyAmp: false) {
+	@if $applyAmp {
+		// WebKit browsers
+		&::-webkit-input-placeholder,
+		// for Firefox 19 and below
+		&:-moz-placeholder,
+		// for Firefox 20 and above
+		&::-moz-placeholder,
+		// Internet Explorer 10+
+		&:-ms-input-placeholder {
+			@content;
+		}
+	} @else {
+		// WebKit browsers
+		::-webkit-input-placeholder,
+		// for Firefox 19 and below
+		:-moz-placeholder,
+		// for Firefox 20 and above
+		::-moz-placeholder,
+		// Internet Explorer 10+
+		:-ms-input-placeholder {
+			@content;
+		}
+	}
+}
+
+@mixin prefix-autofill($applyAmp: false) {
+	@if $applyAmp {
+		&:-webkit-autofill {
+			@content;
+		}
+	} @else {
+		:-webkit-autofill {
+			@content;
+		}
+	}
+}
+
+/**
+ * Generate font icons via fontello icon fonts.
+ *
+ * @param  $label
+ *   The font icon content value passed as is to css content.
+ *
+ * @param  $position
+ *   (optional) The type of the pseudo-element, can be 'before' or 'after'.
+ *   Defaults to 'before'.
+ */
+@mixin font-icon($label, $position: 'before') {
+	&:#{$position} {
+		@extend %font-icon-defaults;
+		content: '#{map-get($icon-codes, $label)}';
+		@content;
+	}
+}
+
+// Provides a cross-browser method to implement `display: inline-block;`
+@mixin inline-block($alignment: $inline-block-alignment) {
+	// standard
+	display: -moz-inline-box;
+	-moz-box-orient: vertical;
+	display: inline-block;
+	@if $alignment and $alignment != none {
+		vertical-align: $alignment;
+	}
+}
+
+// Sets the specified background color and calculates a dark or light
+// contrasted text color.  The arguments are passed through to the
+// [contrast-color function](#function-contrast-color).
+@mixin contrasted($background-color, $dark: $contrasted-dark-default, $light: $contrasted-light-default, $threshold: null) {
+  @if $threshold {
+    @warn "The $threshold argment to contrasted is no longer needed and will be removed in the next release."
+  }
+  background-color: $background-color;
+  color: contrast-color($background-color, $dark, $light);
+}

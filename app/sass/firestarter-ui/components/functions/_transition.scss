@@ -1,0 +1,45 @@
+// Checks if the value given is a unit of time.
+@function is-time($value) {
+  @return if(type-of($value) == number, not not index(s ms, unit($value)), false);
+}
+
+// Returns `$property` with the given prefix if it is found in `$transitionable-prefixed-values`.
+@function prefixed-for-transition($prefix, $property) {
+  @if not $prefix {
+    @return $property;
+  }
+  @if type-of($property) == list or type-of($property) == arglist {
+    $new-list: comma-list();
+    @each $v in $property {
+      $new-list: append($new-list, prefixed-for-transition($prefix, $v));
+    }
+    @return $new-list;
+  } @else {
+    @if index($transitionable-prefixed-values, $property) {
+      @return #{$prefix}-#{$property};
+    } @else {
+      @return $property;
+    }
+  }
+}
+
+// Returns $transition-map which includes key and values that map to a transition declaration
+@function transition-map($transition) {
+  $transition-map: ();
+
+  @each $item in $transition {
+    @if is-time($item) {
+      @if map-has-key($transition-map, duration) {
+        $transition-map: map-merge($transition-map, (delay: $item));
+      } @else {
+        $transition-map: map-merge($transition-map, (duration: $item));
+      }
+    } @else if map-has-key($transition-map, property) {
+      $transition-map: map-merge($transition-map, (timing-function: $item));
+    } @else {
+      $transition-map: map-merge($transition-map, (property: $item));
+    }
+  }
+
+  @return $transition-map;
+}

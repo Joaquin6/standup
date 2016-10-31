@@ -1,0 +1,169 @@
+<div class="ui segment">
+	<h2 class="ui right floated header">Personal Information</h2>
+	<div class="ui clearing divider"></div>
+	<div class="ui segments">
+		<div class="ui segment">
+			<form id="PersonalInformationForm" class="ui form">
+				<div class="field">
+					<label>Email Address (Username)</label>
+					<div class="twelve wide field">
+						<input type="email" placeholder="{{ account.email }}">
+					</div>
+				</div>
+				<div class="field">
+					<label>Name</label>
+					<div class="two fields">
+						<div class="field">
+							<input type="text" name="personal[first-name]" placeholder="{{ account.firstName }}">
+						</div>
+						<div class="field">
+							<input type="text" name="personal[last-name]" placeholder="{{ account.lastName }}">
+						</div>
+					</div>
+				</div>
+				<div class="field">
+					<label>Phone Number</label>
+					<div class="fields">
+						<div class="three wide field">
+							<input type="text" name="personal[phone-number-areacode]" placeholder="({{ phoneData.areaCode }})">
+						</div>
+						<div class="three wide field">
+							<input type="text" name="personal[phone-number-exchange]" placeholder="{{ phoneData.exchange }}">
+						</div>
+						<div class="four wide field">
+							<input type="text" name="personal[phone-number-suffix]" placeholder="{{ phoneData.suffix }}">
+						</div>
+					</div>
+				</div>
+				<div class="ui segment">
+					<div class="field">
+						<div class="ui toggle checkbox">
+							<input type="checkbox" name="newsletter" tabindex="0" class="hidden">
+							<label>I wish to opt out of receiving emails from Firestarter.</label>
+						</div>
+					</div>
+				</div>
+				<div class="ui primary button" tabindex="0">Save</div>
+				<p>You will receieve an email confirming the changes to your profile once saved</p>
+			</form>
+		</div>
+	</div>
+</div>
+<div class="ui segment">
+    <h2 class="ui right floated header">Change Password</h2>
+	<div class="ui clearing divider"></div>
+	<div class="ui segments">
+		<div class="ui secondary segment">
+			<form id="ChangePasswordForm" class="ui form">
+				<div class="field">
+					<div class="twelve wide field">
+						<input type="password" name="changepassword[current-password]" placeholder="Enter Current Password">
+					</div>
+				</div>
+				<div class="two fields">
+					<div class="field">
+						<input type="password" name="changepassword[new-password]" placeholder="Enter New Password">
+					</div>
+					<div class="field">
+						<input type="password" name="changepassword[verify-new-password]" placeholder="Verify New Password">
+					</div>
+				</div>
+				<div class="ui primary button" tabindex="0">Change Password</div>
+				<p>You will receieve an email confirming the changes to your profile once saved</p>
+			</form>
+		</div>
+	</div>
+</div>
+<div class="ui segment">
+	<h2 class="ui right floated header">Update Address</h2>
+	<div class="ui clearing divider"></div>
+	<div class="ui segments">
+		<div class="ui tertiary segment">
+			<form id="ChangeAddressForm" class="ui form">
+				<div class="required field">
+					<label>Address 1</label>
+					<input type="text" name="changeaddress[address]" placeholder="Street Address">
+				</div>
+				<div class="field">
+					<label>Address 2</label>
+					<input type="text" name="changeaddress[address-2]">
+				</div>
+				<div class="two fields">
+					<div class="required field">
+						<label>City</label>
+						<input type="text" name="changeaddress[city]" placeholder="Enter City">
+					</div>
+					<div class="required field">
+						<label>State</label>
+						<select class="ui fluid dropdown">
+							<option value="">State</option>
+							<option value="AL">Alabama</option>
+							<option value="AK">Alaska</option>
+							<option value="AZ">Arizona</option>
+							<option value="AR">Arkansas</option>
+							<option value="CA">California</option>
+							<option value="CO">Colorado</option>
+							<option value="CT">Connecticut</option>
+							<option value="DE">Delaware</option>
+							<option value="DC">District Of Columbia</option>
+							<option value="FL">Florida</option>
+							<option value="GA">Georgia</option>
+							<option value="HI">Hawaii</option>
+							<option value="ID">Idaho</option>
+							<option value="IL">Illinois</option>
+							<option value="IN">Indiana</option>
+							<option value="IA">Iowa</option>
+							<option value="KS">Kansas</option>
+							<option value="KY">Kentucky</option>
+							<option value="LA">Louisiana</option>
+							<option value="ME">Maine</option>
+							<option value="MD">Maryland</option>
+							<option value="MA">Massachusetts</option>
+							<option value="MI">Michigan</option>
+							<option value="MN">Minnesota</option>
+							<option value="MS">Mississippi</option>
+							<option value="MO">Missouri</option>
+							<option value="MT">Montana</option>
+							<option value="NE">Nebraska</option>
+							<option value="NV">Nevada</option>
+							<option value="NH">New Hampshire</option>
+							<option value="NJ">New Jersey</option>
+							<option value="NM">New Mexico</option>
+							<option value="NY">New York</option>
+							<option value="NC">North Carolina</option>
+							<option value="ND">North Dakota</option>
+							<option value="OH">Ohio</option>
+							<option value="OK">Oklahoma</option>
+							<option value="OR">Oregon</option>
+							<option value="PA">Pennsylvania</option>
+							<option value="RI">Rhode Island</option>
+							<option value="SC">South Carolina</option>
+							<option value="SD">South Dakota</option>
+							<option value="TN">Tennessee</option>
+							<option value="TX">Texas</option>
+							<option value="UT">Utah</option>
+							<option value="VT">Vermont</option>
+							<option value="VA">Virginia</option>
+							<option value="WA">Washington</option>
+							<option value="WV">West Virginia</option>
+							<option value="WI">Wisconsin</option>
+							<option value="WY">Wyoming</option>
+						</select>
+					</div>
+				</div>
+				<div class="two fields">
+					<div class="required field">
+						<label>Zipcode</label>
+						<input type="text" name="changeaddress[zipcode]" placeholder="12345">
+					</div>
+					<div class="field">
+						<label>Country</label>
+						<input type="text" placeholder="USA" readonly="" value="USA">
+					</div>
+				</div>
+				<div class="ui primary button" tabindex="0">Save</div>
+				<p>You will receieve an email confirming the changes to your profile once saved</p>
+			</form>
+		</div>
+	</div>
+</div>

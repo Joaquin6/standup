@@ -1,0 +1,8 @@
+@function default-box-shadow() {
+  @return compact(if($default-box-shadow-inset, inset, null)
+                  $default-box-shadow-h-offset
+                  $default-box-shadow-v-offset
+                  $default-box-shadow-blur
+                  $default-box-shadow-spread
+                  $default-box-shadow-color);
+}

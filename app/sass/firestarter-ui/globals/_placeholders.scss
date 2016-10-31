@@ -1,0 +1,58 @@
+//
+// Placeholder Styles
+// ====================================================================
+// ====================================================================
+// these only get generated into the CSS if they are extended elsewhere
+// For example: @extend %clearfix;
+// ====================================================================
+
+%flex {
+	@include display-flex;
+}
+
+%flex-align-center {
+	@include display-flex;
+	@include align-items(center);
+}
+
+%flex-align-stretch {
+	@include display-flex;
+	@include align-items(stretch);
+}
+
+%remove-margin-top {
+    margin-top: 0;
+}
+
+%fluid-width {
+	width: 100%;
+}
+
+%fl {
+    float: left;
+}
+
+%fr {
+    float: right;
+}
+
+%block {
+    display: block;
+}
+
+%inline-block {
+    display: inline-block;
+}
+
+%margin0 {
+    margin: 0;
+}
+
+%pad-top-bottom {
+    padding-top: 50px;
+    padding-bottom: 50px;
+}
+
+%trans-dimmed-box-shadow {
+	box-shadow: 0px 0px 0px 1px transparent inset, 0px 0em 0px 0px $dimmer-light inset;
+}

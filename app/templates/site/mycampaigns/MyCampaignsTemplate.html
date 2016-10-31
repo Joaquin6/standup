@@ -1,0 +1,22 @@
+<div id="CampaignItemAccordionTitle" class="title">
+	<i class="dropdown icon"></i>
+	{{ displayName }}
+</div>
+<div class="content">
+	<p class="transition hidden">
+		<div class="ui left floated">
+			<p><strong>Status:</strong><span class="campaign-status">{{ status }}</span></p>
+			<p><strong>Time left (DD:HH:MM):</strong> <span>14:25:00</span></p>
+		</div>
+		<div class="ui grid">
+			<div class="ten wide column">
+				<p class="campaign-description">{{ internalDescription }}</p>
+				<p><strong>Start: </strong>{{ formatDate(start) }}</p>
+				<p><strong>End: </strong>{{ formatDate(end) }}</p>
+			</div>
+			<div class="six wide column">
+				<div id="campaign-{{ id }}" class="ui button" data-campaignid="{{ id }}" data-bypass>Details</div>
+			</div>
+		</div>
+	</p>
+</div>

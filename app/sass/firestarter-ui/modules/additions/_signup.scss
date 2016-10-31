@@ -1,0 +1,20 @@
+// Signup Page
+body {
+  background-color: #DADADA;
+}
+body > #SignupView {
+  background-color: #DADADA;
+  padding: 20px;
+}
+#SignupView.grid {
+  /*height: 100%;*/
+}
+#SignupView .checkbox {
+  margin: 20px;
+}
+#SignupView > .image {
+  margin-top: -100px;
+}
+#SignupView > .column {
+  max-width: 945px;
+}

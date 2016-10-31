@@ -1,0 +1,29 @@
+@function _normalize-include($section) {
+  // Check if $section is in the $include list.
+  @if index($_normalize-include, $section) {
+    @return true;
+  }
+  // If $include is set to (all), make sure $section is not in $exclude.
+  @else if not index($_normalize-exclude, $section) and index($_normalize-include, all) {
+    @return true;
+  }
+  @return false;
+}
+
+// This is the minimal amount of code needed to create vertical rhythm in our
+// CSS. If you are looking for a robust solution, look at the excellent Typey
+// library. @see https://github.com/jptaranto/typey
+@function normalize-rhythm($value, $relative-to: $base-font-size, $unit: $base-unit) {
+  @if unit($value) != px {
+    @error "The normalize vertical-rhythm module only supports px inputs. The typey library is better.";
+  }
+  @if $unit == rem {
+    @return ($value / $base-font-size) * 1rem;
+  }
+  @else if $unit == em {
+    @return ($value / $relative-to) * 1em;
+  }
+  @else { // $unit == px
+    @return $value;
+  }
+}

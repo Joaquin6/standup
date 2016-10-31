@@ -1,0 +1,72 @@
+// Clip the background (image and color) at the edge of the padding, border, or content.
+//   $clip... : [padding-box | border-box | content-box]
+@mixin background-clip($clip...) {
+  $output: ();
+  $deprecated: ();
+
+  @if (length($clip) > 0) {
+    @each $layer in $clip {
+      $output: append($output, unquote($layer), comma);
+      $deprecated: append($deprecated, legacy-box($layer), comma);
+    }
+  } @else {
+    $output: $default-background-clip;
+    $deprecated: legacy-box($default-background-clip);
+  }
+
+  @include with-each-prefix(background-img-opts, $background-clip-support-threshold) {
+    @if $current-prefix == -moz or $current-prefix == -webkit {
+      // Legacy versions of Mozilla support a different syntax, prefixed.
+      @include prefix-prop(background-clip, $deprecated);
+    } @else {
+      @include prefix-prop(background-clip, $output);
+    }
+  }
+}
+
+// Set the origin of the background (image and color) at the edge of the padding, border, or content.
+//
+//     $origin... : [padding-box | border-box | content-box]
+@mixin background-origin($origin...) {
+  $output: ();
+  $deprecated: ();
+
+  @if (length($origin) > 0) {
+    @each $layer in $origin {
+      $output: append($output, unquote($layer), comma);
+      $deprecated: append($deprecated, legacy-box($layer), comma);
+    }
+  } @else {
+    $output: $default-background-origin;
+    $deprecated: legacy-box($default-background-origin);
+  }
+
+  @include with-each-prefix(background-img-opts, $background-origin-threshold) {
+    @if $current-prefix == -moz or $current-prefix == -webkit {
+      // Legacy versions of Mozilla support a different syntax, prefixed.
+      @include prefix-prop(background-origin, $deprecated)
+    } @else {
+      @include prefix-prop(background-origin, $output)
+    }
+  }
+}
+
+// Set the size of background images using px, width and height, or percentages.
+// Currently supported in: Opera, Gecko, Webkit.
+//
+// * percentages are relative to the background-origin (default = padding-box)
+// * mixin defaults to: `$default-background-size`
+@mixin background-size($size...) {
+  $size: set-arglist-default($size, $default-background-size);
+  @include prefixed-properties(background-img-opts, $background-size-threshold, (background-size: $size));
+}
+
+@mixin color-bgcolor($bgcolor, $color) {
+  background-color: $bgcolor;
+  color: $color;
+}
+
+@mixin background-combo($bgcolor, $bgimg) {
+  background-color: $bgcolor;
+  background-image: $bgimg;
+}

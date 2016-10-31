@@ -1,0 +1,80 @@
+<h2 id="campaignTitle" class="ui left floated header">{{ name }}</h2>
+<div class="ui clearing divider"></div>
+<div class="ui segments">
+	<div class="ui segment">
+		<h4 id="campaignUserStatus"><strong>Invited</strong></h4>
+		<div class="ui equal width grid">
+			<div class="column">
+				<p><strong>Dates: </strong> {{ formatDate(start) }} - {{ formatDate(end) }}</p>
+				<p><strong>Campaign destination: </strong> http://www.google.com </p>
+				<p><strong>Rate: </strong> {{ formatCurrency(cpc) }} per click</p>
+			</div>
+			<div class="column">
+				<p><strong>Status</strong>{{ status }}</p>
+				<p><strong>Days Left</strong> 100</p>
+				<p><strong>Received clicks</strong> {{ activity.totalClicks }}</p>
+				<p><strong>actual reader clicks</strong> {{ activity.uniqueVisits }}</p>
+			</div>
+		</div>
+	</div>
+	<div class="ui secondary segment">
+		<div id="CampaignOverviewAccordion" class="ui styled fluid accordion">
+			<div id="CampaignOverviewAccordionTitle" class="title">
+				<i class="large dropdown icon"></i>
+				Campaign Overview
+			</div>
+		</div>
+		<div id="CampaignSuccessAccordion" class="ui styled fluid accordion">
+			<div id="CampaignSuccessAccordionTitle" class="title">
+				<i class="large dropdown icon"></i>
+				Campaign Success
+			</div>
+		</div>
+		<div id="SubmittedLinksAccordion" class="ui styled fluid accordion">
+			<div id="SubmittedLinksAccordionTitle" class="title">
+				<i class="large dropdown icon"></i>
+				Submitted Links
+			</div>
+		</div>
+	</div>
+	<div class="ui segment">
+		<h2>Choose your content</h2>
+		<p>Create your blog promotion by selecting from the written, visual and video content below.</p>
+		<div id="RequiredTrackingCodeAccordion" class="ui styled fluid accordion">
+			<div id="RequiredTrackingCodeAccordionTitle" class="title">
+				<i class="large dropdown icon"></i>
+				Required Tracking Code
+			</div>
+		</div>
+		<div id="SocialQuickShareAccordion" class="ui styled fluid accordion">
+			<div id="SocialQuickShareAccordionTitle" class="title">
+				<i class="large dropdown icon"></i>
+				Social Quick Share
+			</div>
+		</div>
+		<div id="BlogTextAccordion" class="ui styled fluid accordion">
+			<div id="BlogTextAccordionTitle" class="title">
+				<i class="large dropdown icon"></i>
+				Blog Text
+			</div>
+		</div>
+		<div id="BlogGraphicAccordion" class="ui styled fluid accordion">
+			<div id="BlogGraphicAccordionTitle" class="title">
+				<i class="large dropdown icon"></i>
+				Blog Graphic
+			</div>
+		</div>
+		<div id="BlogVideoAccordion" class="ui styled fluid accordion">
+			<div id="BlogVideoAccordionTitle" class="title">
+				<i class="large dropdown icon"></i>
+				Blog Video
+			</div>
+		</div>
+		<div id="BlogCampaignUrlAccordion" class="ui styled fluid accordion">
+			<div id="BlogCampaignUrlAccordionTitle" class="title">
+				<i class="large dropdown icon"></i>
+				Blog Campaign Url
+			</div>
+		</div>
+	</div>
+</div>

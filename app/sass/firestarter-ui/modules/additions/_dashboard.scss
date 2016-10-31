@@ -1,0 +1,45 @@
+// Base Layout > Content Region
+#ContentRegion.pushable {
+  overflow-y: hidden;
+}
+
+// Blogger Dashboard
+$mirum-purple: #2a1046;
+#ApplictionStatusView {
+  .application-status {
+    h3{
+      span{
+        color: $mirum-purple;
+        text-transform: capitalize;
+      }
+    }
+  }
+}
+#PaymentStatusView {
+  .payment-status {
+    h4 {
+      color: $mirum-purple;
+    }
+  }
+}
+#ParticipationItemView {
+  .caption {
+    overflow: hidden;
+    p {
+      text-transform: uppercase;
+      padding: 0;
+      &:first-of-type {
+        padding-right: 5px;
+      }
+      &:last-of-type {
+        padding-left: 5px;
+      }
+      strong {
+        display: block;
+      }
+      span {
+        color: $mirum-purple;
+      }
+    }
+  }
+}

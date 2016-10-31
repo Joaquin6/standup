@@ -1,0 +1,4 @@
+// @private
+@function default-animation() {
+ 	@return compact($default-animation-name $default-animation-duration $default-animation-timing-function $default-animation-delay $default-animation-iteration-count $default-animation-direction $default-animation-fill-mode $default-animation-play-state);
+}
