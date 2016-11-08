@@ -146,21 +146,9 @@ function getResolve() {
         root: contextPath,
         alias: {
             // Alias backbone to the version installed as a dependency of marionette
-            backbone: 'backbone.marionette/node_modules/backbone/backbone.js',
-            // Alias backbone.wreqr to the version installed as a dependency of marionette
-            'backbone.wreqr':'backbone.marionette/node_modules/backbone.wreqr/lib/backbone.wreqr.js',
-            // Alias marionette to backbone.marionette to reduce the amount of typing in import statements
-            marionette: 'backbone.marionette',
-            // Alias wreqr to backbone.wreqr to reduce the amount of typing in import statements
-            wreqr: 'backbone.wreqr',
+            backbone: 'backbone/backbone.js',
             // Alias Cookie to js-cookie to enable ie11 compatibility.
             cookies: 'js-cookie/src/js.cookie.js',
-            // Alias Semantic-UI
-            semantic: 'semantic/semantic.js',
-            // Alias Semantic-UI
-            nano: 'nanoscroller/bin/javascripts/jquery.nanoscroller.js',
-            // Alias Highcharts
-            highchartssrc: 'highcharts/highcharts.src.js',
             // This allows us to bring in either CSS for deployment or SASS for development
             fsstyles: fsStyles
         },
