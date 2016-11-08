@@ -1,12 +1,10 @@
-var http        = require('http');
-var Q 			= require("q");
-var express 	= require('express');
-var _ 			= require('underscore');
-var clc    		= require("cli-color");
-var Moment      = require("moment");
-var Utility  	= require('../../libs/utils');
-var Accounts 	= require('../../models/public/accounts');
-var app 		= express();
+var http        = require('http'),
+    Q 			= require("q"),
+    express 	= require('express'),
+    _ 			= require('underscore'),
+    Utility  	= require('../../libs/utils'),
+    Accounts 	= require('../../models/public/accounts'),
+    app 		= express();
 
 var appSettings = global.settings;
 

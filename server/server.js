@@ -1,47 +1,28 @@
-var path = require('path'),
-    http = require('http'),
-    crypto = require('crypto'),
-    express = require('express'),
-    bodyParser = require('body-parser'),
-    methodOverride = require('method-override'),
-    colors = require('colors'),
-    httpProxy = require('http-proxy'),
-    program = require('commander'),
-    multer = require('multer'),
-    passport = require('passport'),
-    jwt = require('jwt-simple'),
-    configUtils = require('./config'),
-    api = require('./router'),
-    proxy = httpProxy.createProxyServer(),
-    app = express();
+var path            = require('path'),
+    http            = require('http'),
+    express         = require('express'),
+    bodyParser      = require('body-parser'),
+    methodOverride  = require('method-override'),
+    session         = require('express-session'),
+    colors          = require('colors'),
+    httpProxy       = require('http-proxy'),
+    program         = require('commander'),
+    passport        = require('passport'),
+    _               = require("underscore"),
+    config          = require('./config'),
+    clientRootPath  = path.resolve(__dirname, '..', 'app'),
+    proxy           = httpProxy.createProxyServer(),
+    app             = express();
 
 /** ------------ Setup Steps ----------------- */
-var settings = {};
-var clientRootPath = path.resolve(__dirname, '..', 'app');
-/** Keep the file extension in order to pass the validation of the API */
-var storage = multer.diskStorage({
-    destination: function(req, file, cb) {
-        cb(null, './static/forms');
-    },
-    filename: function(req, file, cb) {
-        crypto.pseudoRandomBytes(16, function(err, raw) {
-            if (err) {
-                cb(err);
-            }
-            cb(null, raw.toString('hex') + Date.now() + '.' + path.extname(file.originalname));
-        });
-    }
-});
-global.uploadFile = multer({
-    storage: storage
-});
+var settings = {}, cryptr = null, bundle = null;
 readEnvironment();
 setupEnvironment();
 listen();
 
 function readEnvironment() {
-    var configEnv = configUtils.settings(path.join(__dirname, 'env'), app.get('env'));
-    settings = configUtils.mergeSettingsDefault(configEnv, program);
+    var configEnv = config.settings(path.join(__dirname, 'config', 'env'), app.get("env"));
+    settings = config.mergeSettingsDefault(configEnv, program);
     settings.environment = app.get('env');
     console.log('>>> Node Server: Running Environment: ' + colors.green(settings.environment));
     if (settings.environment === "development") {
@@ -52,46 +33,29 @@ function readEnvironment() {
 }
 
 function setupEnvironment() {
+    /** Configure Passport */
+    require('./libs/auth/passport')(passport);
+    cryptr = require('./libs/cryptr')(settings.encryption);
     console.log('>>> Node Server: Setting Up Environment');
     if (settings.environment === 'prod' || settings.environment === 'qa')
         clientRootPath = path.resolve(__dirname, '..', 'release');
-    app.set("port", settings.port);
-    app.set('siteType', process.env.SITE_TYPE || settings.siteType);
+    app.set('port', settings.port);
     app.use(bodyParser.urlencoded({
         extended: false
     }));
     app.use(bodyParser.json());
     app.use(methodOverride());
 
+    app.use(session({
+        secret: 'your secret sauce',
+        saveUninitialized: true,
+        resave: true
+    }));
     /** Initialize Passport */
     app.use(passport.initialize());
     app.use(passport.session());
 
-    initModules();
-
-    if (settings.environment === 'development') {
-        // We only want to run the workflow when not in production
-        console.log('>>> Node Server: Spawing Webpack Development Server');
-        // We require the bundler inside the if block because
-        // it is only needed in a development environment. Later
-        // you will see why this is a good idea
-        var bundle = require('./bundle.js');
-        bundle(settings);
-        // Any requests to localhost:1919/build is proxied
-        // to webpack-dev-server
-        app.all('/build/*', function(req, res) {
-            proxy.web(req, res, {
-                target: 'http://localhost:1919'
-            });
-        });
-    }
-    app.use(express.static(clientRootPath));
-
-    if (settings.siteType === 'admin')
-        console.log('>>> Node Server: ' + colors.magenta('Running Admin Site'));
-    else
-        console.log('>>> Node Server: ' + colors.green('Running Bloggers Site'));
-    console.log('>>> Node Server: Environment ' + colors.green(settings.environment) + ' Was Set Successfully!');
+    initializeDatabase();
 
     /**
      * Load up the settings now, and make them available at all the routes.
@@ -102,18 +66,55 @@ function setupEnvironment() {
         next();
     });
 
+    if (settings.environment === 'development') {
+        // We only want to run the workflow when not in production
+        console.log('>>> Node Server: Spawing Webpack Development Server');
+        // We require the bundler inside the if block because
+        // it is only needed in a development environment. Later
+        // you will see why this is a good idea
+        bundle = require('./bundle.js')(settings);
+        // Any requests to localhost:1919/build is proxied
+        // to webpack-dev-server
+        app.all('/build/*', function(req, res) {
+            proxy.web(req, res, {
+                target: 'http://localhost:1919'
+            });
+        });
+    }
+
+    app.use(express.static(clientRootPath));
+
     /** token based auth for /api routes */
     var jwtAuth = require("./libs/auth/jwt-auth");
     app.use(jwtAuth);
 
-    api.route(app);
+    require('./router').route(app);
+    console.log('>>> Node Server: Environment ' + colors.green(settings.environment) + ' Was Set Successfully!');
     app.use(function(req, res) {
         var newUrl = req.protocol + '://' + req.get('Host') + '/#' + req.url;
         return res.redirect(newUrl);
     });
+
     process.on('uncaughtException', function(err) {
         console.error(">>> Node Server: Uncaught Exeption");
+        console.error(err);
     });
+
+    process.on("exit", function(code) {
+        console.log(">>> Node Server: Closing with Code " + code);
+        if (bundle) {
+            bundle.closeInstance();
+        }
+    });
+
+    /* ===== REMOVE: if SIGINT event listener is added, process must be manually closed; ===== */
+    // process.on('SIGINT', function() {
+    //     console.log('Got SIGINT.  Press Control-D to exit.');
+    //     if (bundle) {
+    //         bundle.closeInstance();
+    //     }
+    // });
+
     /**
      * It is important to catch any errors from the proxy or the
      * server will crash. An example of this is connecting to the
@@ -122,14 +123,44 @@ function setupEnvironment() {
     proxy.on('error', function(e) {
         console.log(">>> Node Server: " + colors.red('Could not connect to proxy, please try again...'));
     });
-}
 
-function initModules() {
-    initializeDatabase();
+    confimDefaultUsers();
 }
 
 function initializeDatabase() {
     require("./libs/db");
+}
+
+function confimDefaultUsers() {
+    var admin = settings.defaultAdmin;
+    var Accounts = require("./models/public/accounts");
+    Accounts.get({email: admin.email}).then(function(account) {
+        if (account && account.length) {
+            account = account[0];
+            cryptr.setPassword(admin.password, function(err, hash) {
+                account.password = hash;
+                Accounts.update(prepJsonbAccount(account)).then(function(doc) {
+                    console.log(colors.green(">>> Successfully Updated defaultAdmin"));
+                }).fail(function(err) {
+                    console.log(colors.red("!!! ERROR Updating defaultAdmin"));
+                    console.log(err);
+                }).done();
+            });
+        } else {
+            cryptr.setPassword(admin.password, function(err, hash) {
+                admin.password = hash;
+                Accounts.saveDoc(admin).then(function(doc) {
+                    console.log(colors.green(">>> Successfully Saved defaultAdmin"));
+                }).fail(function(err) {
+                    console.log(colors.red("!!! ERROR Saving defaultAdmin"));
+                    console.log(err);
+                }).done();
+            });
+        }
+    }).fail(function(err) {
+        console.log(colors.red("!!! Error Checking for Default Admin"));
+        console.log(err);
+    }).done();
 }
 
 function listen() {
@@ -142,4 +173,17 @@ function listen() {
         /** Print the process version. */
         console.log(">>> Current Version: " + process.version);
     });
+}
+
+function prepJsonbAccount(account) {
+    var newAccount = {
+        id: null,
+        body: {}
+    };
+
+    newAccount.id = account.id;
+    delete account.id;
+    newAccount.body = _.extend(newAccount.body, account);
+
+    return newAccount;
 }

@@ -1,5 +1,7 @@
 var Q 			= require("q"),
+	_ 			= require("underscore"),
 	path        = require("path"),
+	colors      = require('colors'),
 	express     = require("express"),
 	Massive 	= require("massive"),
 	app         = express();
@@ -21,6 +23,23 @@ function initDatabase(settings) {
 		scripts: path.resolve(__dirname, "scripts")
 	});
 	app.set('db', Database);
+
+	/** Execute Command to SET the `search_path` value. */
+	Database.setSearchPath(function(err, res) {
+		if (err) {
+			console.log(colors.red("!!! Postgres DB: SQL Script `setSearchPath` ERROR"));
+		} else {
+			Database.showSearchPath(function(err, res) {
+				if (err) {
+					console.log(colors.red("!!! Postgres DB: SQL Script `showSearchPath` ERROR"));
+				} else {
+					if (res[0])
+						res = res[0];
+					console.log("*** Postgres DB: Successfully SET `search_path` to: " + colors.green(res.search_path));
+				}
+			});
+		}
+	});
 }
 
 function buildConnection(settings) {

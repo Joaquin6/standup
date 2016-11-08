@@ -1,1 +1,0 @@
-SELECT body FROM analytics.socialpixel WHERE body ->> 'date' = $1;

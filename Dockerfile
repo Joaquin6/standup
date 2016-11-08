@@ -1,4 +1,4 @@
-from nodesource/trusty:4.4.3
+from nodesource/trusty:6.2.1
 
 # Define working directory
 WORKDIR /src/

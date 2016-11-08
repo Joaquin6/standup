@@ -72,14 +72,11 @@ module.exports = function(req, res, next) {
     var parsedUrl = url.parse(req.url, true),
         errMsg = '',
         // Express makes all req.headers lowercase
-        token = req.headers["authorization"],
-        // TODO: implement a strategy pattern with strategy/version
-        tokenVer = 'v1'; // default version if not found
+        token = req.headers["authorization"]
 
     if (token) {
         if (token.indexOf("token.") === 0) {
             token = token.replace("token.", "").split(" ");
-            tokenVer = token.length > 1 ? token[0] : tokenVer;
             token = token.length > 1 ? token[1] : token[0];
         } else {
             token = "";
@@ -89,8 +86,7 @@ module.exports = function(req, res, next) {
     // original tokenization
     token = token || (req.body && req.body.access_token) || parsedUrl.query.access_token || req.headers["x-access-token"];
     req.token = {
-        t: token || '',
-        v: tokenVer
+        t: token || ''
     };
 
     if (token) {

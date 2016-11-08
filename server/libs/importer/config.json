@@ -1,0 +1,14 @@
+{
+	"database": {
+        "client": "postgres",
+        "username": "postgres_admin",
+        "password": "p0stgrEs_adm1NpASS",
+        "host": "lab-pg-db.mirum.la",
+        "name": "visionwheeldealers-qa",
+        "port": 5432,
+        "max": 10,
+        "idleTimeoutMillis": 30000
+    },
+    "vwInventoryFile": "http://www.visionwheel.com/dealers/export.cfm",
+    "stackTraceLimit": 25
+}

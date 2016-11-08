@@ -1,6 +1,6 @@
 var http = require('http');
 var https = require('https');
-var Utility = require('../utils');
+var utilHelper = require('./utilHelper');
 var fs = require("fs");
 
 function httpRequest(payload, cb) {
@@ -146,7 +146,7 @@ function removeInvalidHeaders(payload, requestOptions) {
 function getApiResultObject(body, res) {
     var bodyObject = body;
 
-    if (Utility.isValidJson(body)) {
+    if (utilHelper.isValidJson(body)) {
         bodyObject = JSON.parse(body);
     }
 
@@ -172,7 +172,7 @@ function setResponseHeaders(res, apiResponseHeaders) {
 function sendWebResponse(res, statusCode, body, headers) {
     if (res) {
         setResponseHeaders(res, headers);
-        return res.status(statusCode).send(Utility.dump(body));
+        return res.status(statusCode).send(utilHelper.dump(body));
     }
 }
 

@@ -8,13 +8,13 @@ var mainPath        = path.resolve(__dirname, 'app', 'js', 'app.js');
 var nodeModulesPath = path.resolve(__dirname, 'node_modules');
 
 function defineSettings() {
-    var configUtils     = require('./server/config');
+    var config          = require('./server/config');
     var program         = require('commander');
     var express         = require('express');
     var app             = express();
 
-    var configEnv = configUtils.settings(path.join(__dirname, 'server/env'));
-    settings = configUtils.mergeSettingsDefault(configEnv, program);
+    var configEnv = config.settings(path.join(__dirname, "server", "config", "env"));
+    settings = config.mergeSettingsDefault(configEnv, program);
     settings.environment = app.get('env');
     global.settings = settings;
 }
@@ -126,33 +126,28 @@ function getWatchMode() {
 
 function getResolve() {
     console.log('*** Webpack: Assigning ' + colors.green(environment) + ' Resolve Options');
-    var fsStyles = 'firestarter.css';
+    var fsStyles = 'visionwheel.css';
     var fsStylesPath = 'css';
-    var fsJSPath = 'js/site';
-    var fsTempPath = 'templates/site';
     // If env is development, bring in SASS instead
     if (environment === 'development') {
-        fsStyles = 'firestarter.scss';
+        fsStyles = 'visionwheel.scss';
         fsStylesPath = 'sass';
     }
-    if (settings.siteType === 'admin') {
-        console.log('*** Webpack: Applying Alias for ' + colors.magenta('Admin Site'));
-        fsJSPath = 'js/admin';
-        fsTempPath = 'templates/admin';
-    } else
-        console.log('*** Webpack: Applying Alias for ' + colors.green('Bloggers Site'));
+    console.log('*** Webpack: Applying Alias for ' + colors.green('Vision Wheel Site'));
     // Build up the Resolve object settings based on the env and site
     var resolve = {
         root: contextPath,
         alias: {
             // Alias backbone to the version installed as a dependency of marionette
             backbone: 'backbone/backbone.js',
+            // Alias marionette to backbone.marionette to reduce the amount of typing in import statements
+            marionette: 'backbone.marionette/lib/backbone.marionette.js',
             // Alias Cookie to js-cookie to enable ie11 compatibility.
             cookies: 'js-cookie/src/js.cookie.js',
             // This allows us to bring in either CSS for deployment or SASS for development
             fsstyles: fsStyles
         },
-        modulesDirectories: [fsStylesPath, fsJSPath, fsTempPath, 'js/common', 'templates/common', 'node_modules']
+        modulesDirectories: [fsStylesPath, 'js', 'libs', 'templates', 'node_modules']
     };
     console.log('*** Webpack: Serving Stylesheets ' + colors.green(fsStyles));
     return resolve;
@@ -214,10 +209,10 @@ function getPlugins() {
         plugins.push(
             new webpack.optimize.OccurenceOrderPlugin(),
             new HtmlWebpackPlugin({
-                title: 'The Firestarter Network | Firestarter',
-                template: 'templates/common/root.html',
+                title: 'Vision Wheel | Dealers',
+                template: 'templates/root.html',
                 inject: 'head',
-                favicon: 'images/generic/favicon.ico',
+                favicon: 'images/favicon.ico',
                 filename: 'index.html',
                 hash: true
             }),

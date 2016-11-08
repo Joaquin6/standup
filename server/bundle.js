@@ -1,11 +1,22 @@
-var webpack             = require('webpack');
-var webpackDevServer    = require('webpack-dev-server');
-var webpackConfig       = require('./../webpack.config.js');
-var path                = require('path');
-var fs                  = require('fs');
+var webpack = require('webpack');
+var webpackDevServer = require('webpack-dev-server');
+var webpackConfig = require('./../webpack.config.js');
+var path = require('path');
+var fs = require('fs');
 var colors = require('colors');
 
-module.exports = function(settings) {
+function WebpackBundler(settings) {
+    if (!(this instanceof WebpackBundler)) {
+        return new WebpackBundler(settings);
+    }
+    this.init(settings);
+}
+
+// export module
+module.exports = WebpackBundler;
+
+
+WebpackBundler.prototype.init = function(settings) {
     // First we fire up webpack and pass in the configuration we created
     var bundleStart = null;
     var compiler = webpack(webpackConfig);
@@ -28,11 +39,15 @@ module.exports = function(settings) {
         console.log('--- Webpack Bundler: ' + colors.green('Project Bundled in ') + colors.blue((Date.now() - bundleStart)) + colors.green(' Milliseconds!'));
     });
 
-    var bundler = new webpackDevServer(compiler, settings.webpackDevServer);
+    var bundler = this.bundler = new webpackDevServer(compiler, settings.webpackDevServer);
     var bundlerOpts = settings.webpackBundler;
     // We fire up the development server and give notice in the terminal
     // that we are starting the initial bundle
     bundler.listen(bundlerOpts.port, bundlerOpts.host, function() {
         console.log('--- Webpack Bundler: ' + colors.green('Bundling Project, Please Wait...'));
     });
+};
+
+WebpackBundler.prototype.closeInstance = function() {
+    this.bundler.close();
 };
